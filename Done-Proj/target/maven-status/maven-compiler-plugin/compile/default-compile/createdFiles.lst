@@ -1,9 +1,0 @@
-com\example\springssodemo\config\SecurityConfig.class
-com\example\springssodemo\repo\UserRepository.class
-com\example\springssodemo\controller\HomeController.class
-com\example\springssodemo\controller\DashboardController.class
-com\example\springssodemo\SpringSsoJwtDemoApplication.class
-com\example\springssodemo\config\SamlConfig.class
-com\example\springssodemo\controller\AuthController.class
-com\example\springssodemo\model\User.class
-com\example\springssodemo\controller\SsoController.class
