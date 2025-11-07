@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Login</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 100%);
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(138, 43, 226, 0.15) 0%, transparent 70%);
+      top: -300px;
+      right: -300px;
+      border-radius: 50%;
+      animation: pulse 8s ease-in-out infinite;
+    }
+
+    body::after {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(0, 191, 255, 0.1) 0%, transparent 70%);
+      bottom: -250px;
+      left: -250px;
+      border-radius: 50%;
+      animation: pulse 6s ease-in-out infinite reverse;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.5;
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+      }
+    }
+
+    .card {
+      width: 100%;
+      max-width: 450px;
+      padding: 40px;
+      border-radius: 20px;
+      background: rgba(30, 30, 30, 0.9);
+      backdrop-filter: blur(20px);
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.5),
+        0 0 60px rgba(138, 43, 226, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+      z-index: 1;
+      animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      margin: 0 0 30px 0;
+      color: #ffffff;
+      text-align: center;
+      font-size: 2em;
+      font-weight: 600;
+      background: linear-gradient(135deg, #00bfff, #8a2be2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .error, .message {
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 0.9em;
+      animation: shake 0.5s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    .error {
+      background: rgba(255, 77, 77, 0.1);
+      color: #ff6b6b;
+      border: 1px solid rgba(255, 77, 77, 0.3);
+    }
+
+    .message {
+      background: rgba(50, 205, 50, 0.1);
+      color: #50fa7b;
+      border: 1px solid rgba(50, 205, 50, 0.3);
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      border-radius: 12px;
+      border: 2px solid rgba(138, 43, 226, 0.2);
+      background-color: rgba(43, 43, 43, 0.6);
+      color: #fff;
+      font-size: 1em;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #8a2be2;
+      background-color: rgba(43, 43, 43, 0.8);
+      box-shadow: 
+        0 0 20px rgba(138, 43, 226, 0.4),
+        inset 0 0 10px rgba(138, 43, 226, 0.1);
+      transform: translateY(-2px);
+    }
+
+    input::placeholder {
+      color: #888;
+    }
+
+    button, a.btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, #8a2be2, #00bfff);
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 1em;
+      transition: all 0.3s ease;
+      box-shadow: 
+        0 4px 15px rgba(138, 43, 226, 0.4),
+        0 0 20px rgba(138, 43, 226, 0.2);
+      text-align: center;
+      text-decoration: none;
+      display: block;
+      margin-bottom: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before, a.btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s ease;
+    }
+
+    button:hover::before, a.btn:hover::before {
+      left: 100%;
+    }
+
+    button:hover, a.btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 
+        0 6px 25px rgba(138, 43, 226, 0.6),
+        0 0 40px rgba(138, 43, 226, 0.4);
+    }
+
+    button:active, a.btn:active {
+      transform: translateY(-1px);
+    }
+
+    .divider {
+      text-align: center;
+      margin: 25px 0;
+      color: #666;
+      font-size: 0.9em;
+      position: relative;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 40%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(138, 43, 226, 0.3), transparent);
+    }
+
+    .divider::before {
+      left: 0;
+    }
+
+    .divider::after {
+      right: 0;
+    }
+
+    .sso-section {
+      margin: 20px 0;
+    }
+
+    a.btn {
+      background: linear-gradient(135deg, rgba(138, 43, 226, 0.3), rgba(0, 191, 255, 0.3));
+      border: 2px solid rgba(138, 43, 226, 0.4);
+      backdrop-filter: blur(10px);
+    }
+
+    a.btn:hover {
+      background: linear-gradient(135deg, rgba(138, 43, 226, 0.5), rgba(0, 191, 255, 0.5));
+      border-color: rgba(138, 43, 226, 0.6);
+    }
+
+    .register-link {
+      margin-top: 25px;
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px solid rgba(138, 43, 226, 0.2);
+    }
+
+    .link {
+      color: #00bfff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #00bfff, #8a2be2);
+      transition: width 0.3s ease;
+    }
+
+    .link:hover::after {
+      width: 100%;
+    }
+
+    .link:hover {
+      color: #8a2be2;
+      text-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+    }
+
+    @media (max-width: 500px) {
+      .card {
+        padding: 30px 20px;
+      }
+
+      h2 {
+        font-size: 1.6em;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <h2>Login</h2>
+
+  <div th:if="${error}" class="error" th:text="${error}"></div>
+  <div th:if="${message}" class="message" th:text="${message}"></div>
+
+  <form th:action="@{/doLogin}" method="post">
+    <div><input name="username" placeholder="Username" required/></div>
+    <div><input name="password" type="password" placeholder="Password" required/></div>
+    <div><button type="submit">Login</button></div>
+  </form>
+
+  <div class="divider">OR</div>
+
+  <div class="sso-section">
+    <a href="/sso/login" class="btn">Login with SSO (JWT)</a>
+    <a href="/sso/saml" class="btn">Login with SSO (SAML)</a>
+    <a href="/oauth2/authorization/miniorange" class="btn">Login with SSO (OIDC)</a>
+  </div>
+
+  <div class="register-link">
+    <a href="/register" class="link">Don't have an account? Register here</a>
+  </div>
+</div>
+</body>
+</html>
